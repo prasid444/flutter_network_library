@@ -43,6 +43,7 @@ class RESTExecutor{
   String method;
   String domain;
   String label;
+  bool includeParamsInKey;
   Map<String,dynamic> params;
   List<String> identifiers;
   Map<String,String> headers;
@@ -90,6 +91,7 @@ class RESTExecutor{
       label: executor.label,
       params: executor.params,
       headers: executor.headers,
+      includeParamsInKey: executor.includeParamsInKey,
       identifiers: executor.identifiers,
       method: executor.method,
       successCallback: executor.successCallback,
@@ -106,6 +108,7 @@ class RESTExecutor{
       @required this.label,
       this.method = 'GET',
       this.params,
+      this.includeParamsInKey = true,
       this.identifiers = const [],
       this.headers,
       this.successCallback,
@@ -199,8 +202,10 @@ class RESTExecutor{
 
 
   String getKey(){
-    
-    return '$method$label$identifiers${params.toString()?.hashCode}${headers.toString()?.hashCode}';
+      if (includeParamsInKey) {
+      return '$method$label$identifiers${params.toString()?.hashCode}${headers.toString()?.hashCode}';
+    }
+    return '$method$label$identifiers${headers.toString()?.hashCode}';
   }
 
    Future<Response> execute({
